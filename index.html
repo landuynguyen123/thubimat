@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bí mật của Dlan</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', cursive;
+      background: radial-gradient(circle at center, #fff0f5, #ffd1e8, #ffb3d9);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #login, #main {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+    #main { display: none; }
+    h2 {
+      color: #ff3399;
+      text-shadow: 0 0 5px white;
+      font-size: 5vw;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 4vw;
+      border-radius: 10px;
+      border: 2px solid #ff99cc;
+      outline: none;
+      width: 80%;
+      max-width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 4vw;
+      border: none;
+      background-color: #ff3399;
+      color: white;
+      border-radius: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      max-width: 200px;
+    }
+    button:hover {
+      background-color: #ff66aa;
+    }
+    #typewriter {
+      font-size: 6vw;
+      font-weight: bold;
+      color: #ff0077;
+      text-shadow: 0 0 10px #fff, 0 0 20px #ff66cc;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #ff3399;
+      width: 0;
+      max-width: 100%;
+      animation: typing 4s steps(40, end) forwards, blink 0.8s infinite;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    .cat-gif {
+      width: 40vw;
+      max-width: 250px;
+      height: auto;
+      animation: bounce 2s ease-in-out infinite;
+      z-index: 3;
+      margin-top: 5vh;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .heart {
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      position: absolute;
+      top: -20px;
+      transform: rotate(45deg);
+      opacity: 0.8;
+      z-index: 0;
+      animation: float 5s linear infinite;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { top: 0; left: -10px; }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+    }
+    #fireworks-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="login">
+    <h2>Nhập mật khẩu để mở bí mật 💗</h2>
+    <input type="password" id="password" placeholder="Nhập mã...">
+    <button onclick="checkPassword()">Mở khoá</button>
+    <p id="error" style="color: red;"></p>
+  </div>
+  <div id="main">
+    <div id="typewriter">Cơm nước gì chưa người đẹp của Dlan 💗</div>
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat-gif" alt="Cute Cat">
+    <audio id="bg-music" autoplay loop>
+      <source src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_a4cbf4aab2.mp3?filename=romantic-love-violin-142198.mp3" type="audio/mp3">
+    </audio>
+  </div>
+  <canvas id="fireworks-canvas"></canvas>
+  <script>
+    function checkPassword() {
+      const input = document.getElementById("password").value;
+      const error = document.getElementById("error");
+      if (input === "dlandeptrainhatvutru") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("main").style.display = "flex";
+        setInterval(createHeart, 200);
+        launchFireworks();
+        document.getElementById("bg-music").play().catch(() => {});
+      } else {
+        error.textContent = "Sai mật khẩu òii 😢";
+      }
+    }
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    function launchFireworks() {
+      const canvas = document.getElementById('fireworks-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = [];
+      function createParticle(x, y) {
+        for (let i = 0; i < 100; i++) {
+          particles.push({
+            x: x, y: y, radius: Math.random() * 2 + 1,
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+            velocityX: (Math.random() - 0.5) * 6,
+            velocityY: (Math.random() - 0.5) * 6,
+            life: 100
+          });
+        }
+      }
+      setInterval(() => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height / 2;
+        createParticle(x, y);
+      }, 700);
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, index) => {
+          p.x += p.velocityX;
+          p.y += p.velocityY;
+          p.life--;
+          if (p.life <= 0) {
+            particles.splice(index, 1);
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+          }
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
